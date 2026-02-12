@@ -14,6 +14,7 @@ struct Entidade {
     string name;
     int vida;
     int dt;
+    int dano_min;
     int dano_max;
 };
 
@@ -22,6 +23,7 @@ struct Zumbi : Entidade {
         name = "Zumbi";
         vida = 30;
         dt = 15;
+        dano_min = 1;
         dano_max = 6;
     }
 };
@@ -31,15 +33,26 @@ struct Player : Entidade {
         name = "Player";
         vida = 60;
         dt = 10;
+        dano_min = 1;
         dano_max = 12;
     }
 };
 
+struct DT{
+    int t_min = 1;
+    int t_max = 20;
+};
+
+int teste(DT dificuldade){
+    return roll(dificuldade.t_min,dificuldade.t_max);
+}
+
 int ataque(Entidade* ptr, int dt){
-    int dt_teste = roll(1,20);
+    DT dificuldade;
+    int dt_teste = teste(dificuldade);
     int dano = 0;
     if (dt_teste >= dt){
-        dano = roll(1,ptr->dano_max);
+        dano = roll(ptr->dano_min,ptr->dano_max);
         cout << ptr->name << " - Causa " << dano << " de dano \n";
     }
     else{
@@ -77,6 +90,7 @@ void config(Entidade* ptr){
 int main(){
     Zumbi z1;
     Player p1;
+    DT dificuldade;
     bool game = true;
     int dano;
     int teste;
@@ -143,23 +157,28 @@ int main(){
                     }
                 }
                 break;
+                
             case 2:
                 system("cls");
                 cout << "Aqui vc pode aumentar a dificuldade \n";
-                cout << "1 para modificar o player \n2 para modificar o zumbi \n";
+                cout << "1 para modificar o player \n2 para modificar o zumbi \n3 para mudar o teste de DT";
                 cin >> menu;
                 switch (menu){
-                case 1:
-                    config(&p1);
-                    menu = 0;
-                    break;
-                case 2:
-                    config(&z1);
-                    menu = 0;
-                    break;
+                    case 1:
+                        config(&p1);
+                        menu = 0;
+                        break;
+                    case 2:
+                        config(&z1);
+                        menu = 0;
+                        break;
+                    case 3:
+                        cout << "Informe valor minimo e valor maximo para a nova DT";
+                        cin >> dificuldade.t_min >> dificuldade.t_max;
+                    default:
+                        break;
                 }
-                default:
-                    break;
+
             case 3:
                 system("cls");
                 cout << "Created by Carlos Eduardo \n\n";
